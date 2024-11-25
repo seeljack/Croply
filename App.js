@@ -4,7 +4,8 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Croply!</Text>
+      <Text style={styles.mainText}>Croply!</Text>
+      <Text style={styles.mainText}>Get your crops here!</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -13,8 +14,11 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#008000',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  mainText:{
+    color: 'white'
+  }
 });
