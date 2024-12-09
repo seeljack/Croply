@@ -19,7 +19,7 @@ export default function FarmerInventory({ navigation }) {
   const handleQuantityChange = (id, value) => {
     setInventory((prevInventory) =>
       prevInventory.map((item) =>
-        item.id === id ? { ...item, quantity: value } : item
+        item.id === id ? { ...item, quantity: parseFloat(value) } : item
       )
     );
   };

@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 
 export default function FarmerMain({ navigation, route }) {
   const [notifications, setNotifications] = useState([]);
@@ -14,17 +16,40 @@ export default function FarmerMain({ navigation, route }) {
 
   // Simulate receiving a purchase notification
   useEffect(() => {
-    const exampleNotification = {
-      user: 'John Doe',
-      item: 'Apples',
-      quantity: 5,
-      id: Date.now(),
+    const handlePurchaseNotification = (notification) => {
+      // Send the notification with a random item from the inventory
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        notification,
+      ]);
     };
-    // Example: Simulate receiving a notification after 5 seconds
-    const timer = setTimeout(() => handlePurchaseNotification(exampleNotification), 5000);
 
-    return () => clearTimeout(timer);
-  }, []);
+    const selectRandomNotification = () => {
+      if (inventory.length === 0) return; // Ensure there are items in inventory
+
+      // Pick a random item from the inventory
+      const randomIndex = Math.floor(Math.random() * inventory.length);
+      const item = inventory[randomIndex];
+      
+      // Create a random notification based on the item
+      const notification = {
+        user: 'Random User',
+        item: item.name,
+        quantity: Math.floor(Math.random() * 5) + 1, // Random quantity between 1 and 5
+        id: Date.now(),
+      };
+
+      handlePurchaseNotification(notification);
+    };
+
+    // Send a notification immediately when the app opens
+    selectRandomNotification();
+
+    // Simulate receiving a notification every 2 minutes
+    const timer = setInterval(selectRandomNotification, 120000);
+
+    return () => clearInterval(timer); // Cleanup interval on component unmount
+  }, [inventory]);
 
   const handlePurchaseNotification = (notification) => {
     setNotifications((prev) => [...prev, notification]);
@@ -35,10 +60,6 @@ export default function FarmerMain({ navigation, route }) {
           ? { ...item, quantity: Math.max(item.quantity - notification.quantity, 0) }
           : item
       )
-    );
-    Alert.alert(
-      'New Purchase',
-      `${notification.user} bought ${notification.quantity} ${notification.item}(s)!`
     );
   };
 
@@ -66,25 +87,24 @@ export default function FarmerMain({ navigation, route }) {
 
       {/* Navigation Bar */}
       <View style={styles.navigationBar}>
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => navigation.navigate('FarmerInventory', { inventory })}
-        >
-          <Text style={styles.navButtonText}>Inventory</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => navigation.navigate('FarmerProfile')}
-        >
-          <Text style={styles.navButtonText}>Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => navigation.navigate('UserPurchaseHistory')}
-        >
-          <Text style={styles.navButtonText}>History</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('FarmerSummary', { 
+              inventory: inventory, 
+              setInventory: setInventory,
+              notifications: notifications,
+              setNotifications: setNotifications
+            })}>
+            <Icon name="inventory" size={24} color="#388E3C" style={styles.navIcon} />
+            <Text style={styles.navButtonText}>Inventory</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('UserPurchaseHistory')}>
+            <Icon name="history" size={24} color="#388E3C" style={styles.navIcon} />
+            <Text style={styles.navButtonText}>History</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Profile')}>
+            <Icon name="person" size={24} color="#388E3C" style={styles.navIcon} />
+            <Text style={styles.navButtonText}>Profile</Text>
+          </TouchableOpacity>
+        </View>
     </View>
   );
 }
@@ -94,7 +114,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F5F5F5',
     padding: 20,
-    paddingTop: 20,
+    paddingTop: 90,
   },
   sectionHeader: {
     fontSize: 22,
@@ -127,18 +147,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#E8F5E9',
-    paddingVertical: 15,
+    backgroundColor: '#F1F8E9',
+    height: 70,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     borderTopWidth: 1,
-    borderTopColor: '#CCCCCC',
-    marginTop: 20,
+    borderTopColor: '#D3D3D3',
   },
   navButton: {
     alignItems: 'center',
   },
   navButtonText: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: '600',
     color: '#388E3C',
+    marginTop: 5,
+  },
+  navButtonText2: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#008000',
   },
 });
