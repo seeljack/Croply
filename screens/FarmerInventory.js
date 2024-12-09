@@ -73,8 +73,12 @@ export default function FarmerInventory({ navigation }) {
   };
 
   const handleSubmit = () => {
-    Alert.alert('Success', 'Your inventory has been submitted!');
-    // Add logic to save or send the data to your backend.
+    if (inventory.length === 0) {
+      Alert.alert('Error', 'Please add at least one food item before submitting.');
+      return;
+    }
+  
+    navigation.navigate('FarmerMain', { inventory });
   };
 
   return (

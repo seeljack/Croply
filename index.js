@@ -5,6 +5,7 @@ import Home from './screens/App'
 import Page1 from './screens/Page1'
 import Farmer from './screens/Farmer'
 import FarmerInventory from './screens/FarmerInventory'
+import FarmerMain from './screens/FarmerMain'
 const Stack = createStackNavigator();
 
 function MainNavigator() {
@@ -29,6 +30,11 @@ function MainNavigator() {
       <Stack.Screen 
         name="FarmerInventory" 
         component={FarmerInventory} 
+        options={{ headerShown: false }} 
+      />
+      <Stack.Screen 
+        name="FarmerMain" 
+        component={FarmerMain} 
         options={{ headerShown: false }} 
       />
       </Stack.Navigator>
